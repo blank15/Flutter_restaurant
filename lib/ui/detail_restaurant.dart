@@ -16,32 +16,50 @@ class DetailRestaurant extends StatelessWidget {
   }
 
   Widget _body(BuildContext context){
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      return ListView(
+        padding:const EdgeInsets.all(8),
         children: <Widget>[
-          Text(restaurants.name),
-          Text("City ${restaurants.city}"),
-          Expanded(
-              child: Row(
-                children: [
+          Row(
+              children: [
+                Icon(Icons.location_on,size: 14.0,),
+                Text(restaurants.city,style: TextStyle(fontSize: 12.0,color: Colors.grey))
+              ],
+            ),
+          Row(
+            children: [
                   Icon(
                     Icons.star,
                     color: Colors.orange,
+                    size: 14.0,
                   ),
                   Text(
                     restaurants.rating.toString(),
                   )
                 ],
-              )),
-          Text(restaurants.description,style: TextStyle(color: Colors.grey),),
-          Text("Foods",style: TextStyle(fontSize: 16.0),),
+              ),
+          Padding(padding: const EdgeInsets.all(8),
+          child:
+          Text(restaurants.description,style: TextStyle(color: Colors.grey),),),
+          Text("Foods",style: TextStyle(fontSize: 24.0,color: Colors.green,fontWeight: FontWeight.bold),),
+          Container(
+            width: 10,
+            height: 10,
+            decoration: BoxDecoration(color: Colors.green,shape: BoxShape.rectangle),
+          ),
           ListView.builder( scrollDirection: Axis.vertical,
               shrinkWrap: true,
               itemCount: restaurants.menus.foods.length,
               itemBuilder: (context,index){
-            return _buildListMenu(context, restaurants.menus.foods[index].name);
-          }),
-          Text("Drinks",style: TextStyle(fontSize: 16.0),),
+                return _buildListMenu(context, restaurants.menus.foods[index].name);
+              }),
+
+          Padding(padding:  const EdgeInsets.all(8)),
+          Text("Drinks",style: TextStyle(fontSize: 24.0,color: Colors.green,fontWeight: FontWeight.bold),),
+          Container(
+            width: 10,
+            height: 10,
+            decoration: BoxDecoration(color: Colors.green,shape: BoxShape.rectangle),
+          ),
           ListView.builder(
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
@@ -74,6 +92,7 @@ class DetailRestaurant extends StatelessWidget {
 
   Widget _buildAndroid(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       body: NestedScrollView(headerSliverBuilder: (context,isScrolled){
         return[
           SliverAppBar(

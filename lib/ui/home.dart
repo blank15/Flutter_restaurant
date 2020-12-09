@@ -46,14 +46,24 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Hero(tag:restaurants.id, child:  Image.network(restaurants.pictureId,)),
-                    Text(restaurants.name),
-                    Text(restaurants.city),
+                    Padding(padding: const EdgeInsets.all(5),
+                    child:
+                    Text(restaurants.name,style: TextStyle(fontSize: 16.0,color: Colors.black),),),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Icon(Icons.location_on,size: 14.0,),
+                         Text(restaurants.city,style: TextStyle(fontSize: 12.0,color: Colors.grey))
+                        ],
+                      ),
+                    ),
                     Expanded(
                         child: Row(
                           children: [
                             Icon(
                               Icons.star,
                               color: Colors.orange,
+                              size: 14.0,
                             ),
                             Text(
                               restaurants.rating.toString(),
@@ -82,7 +92,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   Widget _buildAndroid(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Restaurant app'),
+        title: Text('Restaurant app',style: TextStyle(color: Colors.white),textAlign:TextAlign.left),
       ),
       body: _buildList(context),
     );
