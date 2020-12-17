@@ -12,7 +12,22 @@ class DetailRestaurant extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PlatformWidget(androidBuilder: _buildAndroid, iosBuilder: _buildIos);
+    return Scaffold(
+      resizeToAvoidBottomPadding: false,
+      body: NestedScrollView(headerSliverBuilder: (context,isScrolled){
+        return[
+          SliverAppBar(
+            pinned: true,
+            expandedHeight: 300,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Hero(tag: restaurants.id, child:
+              Image.network(restaurants.pictureId,fit:BoxFit.cover ,)),
+              title: Text(restaurants.name,style: TextStyle(color: Colors.white),),
+            ),
+          )
+        ];
+      },body: _body(context),),
+    );
   }
 
   Widget _body(BuildContext context){
