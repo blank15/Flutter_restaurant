@@ -1,13 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_restaurant/data/model/Restaurants.dart';
-import 'package:flutter_restaurant/widget/platform_widget.dart';
+import 'package:flutter_restaurant/data/model/restaurants_model.dart';
+
+import 'home.dart';
 
 class DetailRestaurant extends StatelessWidget {
   static final routeName = '/detail_restaurant';
   static final imageHeader = 'image';
-  final Restaurants restaurants;
 
+  final RestaurantsModel restaurants;
+  // final String routeImage;
   const DetailRestaurant({@required this.restaurants});
 
   @override
@@ -20,8 +22,9 @@ class DetailRestaurant extends StatelessWidget {
             pinned: true,
             expandedHeight: 300,
             flexibleSpace: FlexibleSpaceBar(
-              background: Hero(tag: restaurants.id, child:
-              Image.network(restaurants.pictureId,fit:BoxFit.cover ,)),
+              background: Hero(tag: '${restaurants.id}/${Home.imageNearby}', child:
+              Image.network('https://restaurant-api.dicoding.dev/images/medium/${restaurants
+                  .pictureId}',fit:BoxFit.cover ,)),
               title: Text(restaurants.name,style: TextStyle(color: Colors.white),),
             ),
           )
@@ -61,13 +64,6 @@ class DetailRestaurant extends StatelessWidget {
             height: 10,
             decoration: BoxDecoration(color: Colors.green,shape: BoxShape.rectangle),
           ),
-          ListView.builder( scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: restaurants.menus.foods.length,
-              itemBuilder: (context,index){
-                return _buildListMenu(context, restaurants.menus.foods[index].name);
-              }),
-
           Padding(padding:  const EdgeInsets.all(8)),
           Text("Drinks",style: TextStyle(fontSize: 24.0,color: Colors.green,fontWeight: FontWeight.bold),),
           Container(
@@ -75,13 +71,7 @@ class DetailRestaurant extends StatelessWidget {
             height: 10,
             decoration: BoxDecoration(color: Colors.green,shape: BoxShape.rectangle),
           ),
-          ListView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: restaurants.menus.drinks.length,
-              itemBuilder: (context,index){
-                return _buildListMenu(context, restaurants.menus.drinks[index].name);
-              }),
+
         ],
       );
   }

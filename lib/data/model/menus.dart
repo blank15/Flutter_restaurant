@@ -1,6 +1,6 @@
-import 'package:flutter_restaurant/data/model/Foods.dart';
+import 'package:flutter_restaurant/data/model/foods.dart';
 
-import 'Drinks.dart';
+import 'drinks.dart';
 
 class Menus {
   List<Foods> foods;
