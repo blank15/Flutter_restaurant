@@ -2,21 +2,20 @@ import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/api/api_service.dart';
-import 'restaurant_event.dart';
-import 'restaurant_state.dart';
+import 'package:flutter_restaurant/bloc/bloc.dart';
 
-class RestaurantBloc extends Bloc<RestaurantEvent, RestaurantState> {
+class DetailBloc extends Bloc<RestaurantEvent,RestaurantState>{
   final ApiService apiService;
 
-  RestaurantBloc({@required this.apiService}) : super(RestaurantInit());
-
+  DetailBloc({@required this.apiService}) : super(RestaurantInit());
   @override
-  Stream<RestaurantState> mapEventToState(RestaurantEvent event) async* {
-   if(event is FetchRestaurant){
+  Stream<RestaurantState> mapEventToState(RestaurantEvent event)async*  {
+   if(event is FetchDetailRestaurant){
+     yield RestaurantLoading();
      try {
-       yield RestaurantLoading();
-       final response = await apiService.fetchRestaurans();
-       yield RestaurantSuccess(data: response.restaurants);
+       final response = await apiService.fetchDetail(event.id);
+       debugPrint('data bloc ${response.restaurant.categorieModel}');
+       yield RestaurantSuccess(data: response.restaurant);
      } on DioError catch(e){
        if (e.type == DioErrorType.CONNECT_TIMEOUT ||
            e.type == DioErrorType.RECEIVE_TIMEOUT) {
@@ -29,6 +28,4 @@ class RestaurantBloc extends Bloc<RestaurantEvent, RestaurantState> {
      }
    }
   }
-
-
 }

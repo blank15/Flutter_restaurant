@@ -13,7 +13,6 @@ class FetchRestaurant extends RestaurantEvent {}
 class FetchDetailRestaurant extends RestaurantEvent{
   final String id;
   FetchDetailRestaurant({@required this.id});
-
   @override
   List<Object> get props => [];
 }
