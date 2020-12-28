@@ -4,6 +4,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_restaurant/bloc/bloc.dart';
 import 'package:flutter_restaurant/bloc/detail_restaurant/detail_bloc.dart';
+import 'package:flutter_restaurant/data/model/drinks_model.dart';
 import 'package:flutter_restaurant/data/model/foods_model.dart';
 import 'package:flutter_restaurant/data/model/restaurants_model.dart';
 import 'package:flutter_restaurant/widget/start_rating.dart';
@@ -108,6 +109,9 @@ class _DetailRestaurantState extends State<DetailRestaurant> {
 
   Widget _body(BuildContext context, RestaurantsModel data) {
     return ListView(
+      scrollDirection: Axis.vertical,
+      shrinkWrap: true,
+      physics: ScrollPhysics(),
       padding: const EdgeInsets.all(8),
       children: <Widget>[
         Padding(
@@ -182,7 +186,7 @@ class _DetailRestaurantState extends State<DetailRestaurant> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
           child: Text(
             "Foods",
             style: TextStyle(
@@ -195,20 +199,40 @@ class _DetailRestaurantState extends State<DetailRestaurant> {
         ListView.builder(
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
+            physics: ScrollPhysics(),
             itemCount: data.menus.foods.length,
-            itemBuilder:(context,index){
-              return _buildMenu(context, data.menus.foods[index]);
-            } )
+            itemBuilder: (context, index) {
+              return _buildFoods(context, data.menus.foods[index]);
+            }),
+        Padding(
+          padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
+          child: Text(
+            "Drinks",
+            style: TextStyle(
+                color: Colors.black,
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold),
+            textAlign: TextAlign.start,
+          ),
+        ),
+        ListView.builder(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            physics: ScrollPhysics(),
+            itemCount: data.menus.drinks.length,
+            itemBuilder: (context, index) {
+              return _buildDrinks(context, data.menus.drinks[index]);
+            })
       ],
     );
   }
 
-  Widget _buildMenu(BuildContext context, FoodsModel foodsModel) {
+  Widget _buildFoods(BuildContext context, FoodsModel foodsModel) {
     return Container(
         height: 150,
         width: 150,
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.only(left: 8.0, bottom: 8.0, right: 8.0),
           child: Column(
             children: [
               Row(
@@ -230,6 +254,54 @@ class _DetailRestaurantState extends State<DetailRestaurant> {
                         padding: const EdgeInsets.only(left: 10.0, top: 8.0),
                         child: Text(
                           foodsModel.name,
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                              fontSize: 18.0,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+              Container(
+                height: 0.5,
+                color: Colors.grey,
+                margin: EdgeInsets.only(top: 8.0),
+              )
+            ],
+          ),
+        ));
+  }
+
+  Widget _buildDrinks(BuildContext context, DrinksModel drinkModel) {
+    return Container(
+        height: 150,
+        width: 150,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 8.0, bottom: 8.0, right: 8.0),
+          child: Column(
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(18.0)),
+                    child: Image.network(
+                      'https://www.iconbunny.com/icons/media/catalog/product/2/4/2453.11-drinks-icon-iconbunny.jpg',
+                      fit: BoxFit.cover,
+                      height: 100,
+                      width: 100,
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10.0, top: 8.0),
+                        child: Text(
+                          drinkModel.name,
                           textAlign: TextAlign.start,
                           style: TextStyle(
                               fontSize: 18.0,

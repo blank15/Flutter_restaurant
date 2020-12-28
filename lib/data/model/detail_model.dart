@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_restaurant/data/model/restaurants_model.dart';
 import 'package:json_annotation/json_annotation.dart';
+
 part 'detail_model.g.dart';
 
 @JsonSerializable()

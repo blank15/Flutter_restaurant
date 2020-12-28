@@ -1,9 +1,6 @@
-
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-
-import 'package:carousel_slider/carousel_slider.dart';
-
 
 final List<String> imgList = [
   'https://assets.grab.com/wp-content/uploads/sites/9/2020/06/24152020/GF_MFP_JUNI_BLOG.jpg',
@@ -13,13 +10,12 @@ final List<String> imgList = [
 ];
 
 class SliderWidget extends StatefulWidget {
-
   @override
   _SliderWidgetState createState() => _SliderWidgetState();
 }
 
 class _SliderWidgetState extends State<SliderWidget> {
-  int  _current =0;
+  int _current = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +30,7 @@ class _SliderWidgetState extends State<SliderWidget> {
                 setState(() {
                   _current = index;
                 });
-              }
-          ),
+              }),
         ),
         Padding(
           padding: const EdgeInsets.only(left: 16.0),
@@ -48,9 +43,7 @@ class _SliderWidgetState extends State<SliderWidget> {
                 height: 8.0,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: _current == index
-                      ? Colors.lightGreen
-                      : Colors.grey,
+                  color: _current == index ? Colors.lightGreen : Colors.grey,
                 ),
               );
             }).toList(),
@@ -60,34 +53,39 @@ class _SliderWidgetState extends State<SliderWidget> {
     );
   }
 
-  final List<Widget> imageSliders = imgList.map((item) => Container(
-    child: Container(
-      margin: EdgeInsets.all(5.0),
-      child: ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(5.0)),
-          child: Stack(
-            children: <Widget>[
-              Image.network(item, width: 1200.0,height: 300.0,),
-              Positioned(
-                bottom: 0.0,
-                left: 0.0,
-                right: 0.0,
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Color.fromARGB(200, 0, 0, 0),
-                        Color.fromARGB(0, 0, 0, 0)
-                      ],
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          )
-      ),
-    ),
-  )).toList();
+  final List<Widget> imageSliders = imgList
+      .map((item) => Container(
+            child: Container(
+              margin: EdgeInsets.all(5.0),
+              child: ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                  child: Stack(
+                    children: <Widget>[
+                      Image.network(
+                        item,
+                        width: 1200.0,
+                        height: 300.0,
+                      ),
+                      Positioned(
+                        bottom: 0.0,
+                        left: 0.0,
+                        right: 0.0,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Color.fromARGB(200, 0, 0, 0),
+                                Color.fromARGB(0, 0, 0, 0)
+                              ],
+                              begin: Alignment.bottomCenter,
+                              end: Alignment.topCenter,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )),
+            ),
+          ))
+      .toList();
 }

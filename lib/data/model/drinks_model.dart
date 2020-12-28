@@ -1,11 +1,10 @@
-
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'drinks_model.g.dart';
 
 @JsonSerializable()
-class DrinksModel{
+class DrinksModel {
   @JsonKey(name: "name")
   String name;
 

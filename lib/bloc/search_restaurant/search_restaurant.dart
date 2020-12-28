@@ -4,19 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/api/api_service.dart';
 import 'package:flutter_restaurant/bloc/bloc.dart';
 
-class DetailBloc extends Bloc<RestaurantEvent, RestaurantState> {
+class SearchBloc extends Bloc<RestaurantEvent, RestaurantState> {
   final ApiService apiService;
 
-  DetailBloc({@required this.apiService}) : super(RestaurantInit());
+  SearchBloc({@required this.apiService}) : super(RestaurantInit());
 
   @override
   Stream<RestaurantState> mapEventToState(RestaurantEvent event) async* {
-    if (event is FetchDetailRestaurant) {
+    if (event is SearchRestaurant) {
       yield RestaurantLoading();
       try {
-        final response = await apiService.fetchDetail(event.id);
-        debugPrint('data bloc ${response.restaurant.categorieModel}');
-        yield RestaurantSuccess(data: response.restaurant);
+        final response = await apiService.searchRestaurans(event.query);
+        if (response.restaurants.isNotEmpty) {
+          yield RestaurantSuccess(data: response.restaurants);
+        } else {
+          yield RestaurantFailed(error: "Data Pencarian kosong");
+        }
       } on DioError catch (e) {
         if (e.type == DioErrorType.CONNECT_TIMEOUT ||
             e.type == DioErrorType.RECEIVE_TIMEOUT) {

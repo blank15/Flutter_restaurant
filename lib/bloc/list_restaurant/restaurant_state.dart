@@ -21,7 +21,8 @@ class RestaurantSuccess<T> extends RestaurantState {
   @override
   List<Object> get props => super.props;
 }
-class RestaurantNoInternet extends RestaurantState{}
+
+class RestaurantNoInternet extends RestaurantState {}
 
 class RestaurantFailed<String> extends RestaurantState {
   final String error;
