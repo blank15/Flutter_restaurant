@@ -17,34 +17,27 @@ void main() {
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+
+  ApiService _apiService = ApiService(
+      dio: Dio(BaseOptions(
+        baseUrl: "https://restaurant-api.dicoding.dev",
+        connectTimeout: 50000,
+        receiveTimeout: 30000,
+      )));
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
             create: (context) => RestaurantBloc(
-                    apiService: ApiService(
-                        dio: Dio(BaseOptions(
-                  baseUrl: "https://restaurant-api.dicoding.dev",
-                  connectTimeout: 50000,
-                  receiveTimeout: 30000,
-                ))))),
+                    apiService: _apiService)),
         BlocProvider(
             create: (context) => DetailBloc(
-                    apiService: ApiService(
-                        dio: Dio(BaseOptions(
-                  baseUrl: "https://restaurant-api.dicoding.dev",
-                  connectTimeout: 50000,
-                  receiveTimeout: 30000,
-                ))))),
+                   apiService: _apiService)),
         BlocProvider(
             create: (context) => SearchBloc(
-                    apiService: ApiService(
-                        dio: Dio(BaseOptions(
-                  baseUrl: "https://restaurant-api.dicoding.dev",
-                  connectTimeout: 50000,
-                  receiveTimeout: 30000,
-                ))))),
+                apiService: _apiService)),
       ],
       child: MaterialApp(
         title: 'Restaurant app',
