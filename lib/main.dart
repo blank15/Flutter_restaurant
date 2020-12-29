@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_restaurant/api/api_service.dart';
+import 'package:flutter_restaurant/api/dio_client.dart';
 import 'package:flutter_restaurant/bloc/detail_restaurant/detail_bloc.dart';
 import 'package:flutter_restaurant/bloc/search_restaurant/search_restaurant.dart';
 import 'package:flutter_restaurant/ui/detail_restaurant.dart';
@@ -19,11 +20,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
 
   ApiService _apiService = ApiService(
-      dio: Dio(BaseOptions(
-        baseUrl: "https://restaurant-api.dicoding.dev",
-        connectTimeout: 50000,
-        receiveTimeout: 30000,
-      )));
+      dio: DioClient(apiBaseUrl: "https://restaurant-api.dicoding.dev").dio);
+
 
   @override
   Widget build(BuildContext context) {
