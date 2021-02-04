@@ -1,27 +1,32 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_restaurant/api/api_service.dart';
-import 'package:flutter_restaurant/api/dio_client.dart';
 import 'package:flutter_restaurant/bloc/detail_restaurant/detail_bloc.dart';
 import 'package:flutter_restaurant/bloc/search_restaurant/search_restaurant.dart';
-import 'package:flutter_restaurant/ui/detail_restaurant.dart';
-import 'package:flutter_restaurant/ui/home.dart';
-import 'package:flutter_restaurant/ui/search.dart';
-
+import 'package:flutter_restaurant/data/local/db/database_module.dart';
+import 'package:flutter_restaurant/data/local/local_source_database.dart';
+import 'package:flutter_restaurant/data/repository/restaurant_repository.dart';
+import 'package:flutter_restaurant/data/repository/restaurant_repository_impl.dart';
+import 'package:flutter_restaurant/ui/detail_restaurant_screen.dart';
+import 'package:flutter_restaurant/ui/favorite_screen.dart';
+import 'package:flutter_restaurant/ui/home_screen.dart';
+import 'package:flutter_restaurant/ui/search_screen.dart';
+import 'package:flutter_restaurant/ui/setting_screen.dart';
 import 'bloc/bloc.dart';
 import 'common/style.dart';
+import 'data/remote/api/api_service.dart';
+import 'data/remote/api/dio_client.dart';
+
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
 
-  ApiService _apiService = ApiService(
-      dio: DioClient(apiBaseUrl: "https://restaurant-api.dicoding.dev").dio);
 
+  RestaurantRepository _repository = RestaurantRepositoryImpl(localSourceDatabase: LocalSourceDatabaseImpl(database:  AppDatabase()),
+      apiService: ApiServiceImpl(
+  dio: DioClient(apiBaseUrl: "https://restaurant-api.dicoding.dev/").dio));
 
   @override
   Widget build(BuildContext context) {
@@ -29,13 +34,13 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(
             create: (context) => RestaurantBloc(
-                    apiService: _apiService)),
+                    repository: _repository)),
         BlocProvider(
             create: (context) => DetailBloc(
-                   apiService: _apiService)),
+                repository: _repository)),
         BlocProvider(
             create: (context) => SearchBloc(
-                apiService: _apiService)),
+                repository: _repository)),
       ],
       child: MaterialApp(
         title: 'Restaurant app',
@@ -51,7 +56,9 @@ class MyApp extends StatelessWidget {
           DetailRestaurant.routeName: (context) => DetailRestaurant(
                 restaurants: ModalRoute.of(context).settings.arguments,
               ),
-          SearchView.routeName: (context) => SearchView()
+          SearchView.routeName: (context) => SearchView(),
+          SettingScreen.routeName:(context) => SettingScreen(),
+          FavoriteScreen.routeName:(context) =>FavoriteScreen()
         },
       ),
     );

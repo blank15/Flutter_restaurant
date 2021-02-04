@@ -4,16 +4,16 @@ import 'package:flutter/painting.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_restaurant/bloc/bloc.dart';
 import 'package:flutter_restaurant/bloc/detail_restaurant/detail_bloc.dart';
-import 'package:flutter_restaurant/data/model/drinks_model.dart';
-import 'package:flutter_restaurant/data/model/foods_model.dart';
-import 'package:flutter_restaurant/data/model/restaurants_model.dart';
+import 'package:flutter_restaurant/domain/entity/drinks_entity.dart';
+import 'package:flutter_restaurant/domain/entity/food_entity.dart';
+import 'package:flutter_restaurant/domain/entity/restaurant_entity.dart';
 import 'package:flutter_restaurant/widget/start_rating.dart';
 
 class DetailRestaurant extends StatefulWidget {
   static final routeName = '/detail_restaurant';
   static final imageHeader = 'image';
 
-  final RestaurantsModel restaurants;
+  final RestaurantEntity restaurants;
 
   // final String routeImage;
   const DetailRestaurant({@required this.restaurants});
@@ -23,11 +23,30 @@ class DetailRestaurant extends StatefulWidget {
 }
 
 class _DetailRestaurantState extends State<DetailRestaurant> {
+
+  bool _isFavorite = false;
+  IconData _iconFavorite =  Icons.favorite_border;
+  RestaurantEntity data;
   @override
   void initState() {
     super.initState();
     context.read<DetailBloc>()
       ..add(FetchDetailRestaurant(id: widget.restaurants.id));
+  }
+
+  _setFavorite(){
+    setState(() {
+      _isFavorite =! _isFavorite;
+      if(_isFavorite){
+       if(data !=null){
+         context.read<DetailBloc>()
+           ..add(SaveRestaurant(data: data));
+       }
+        _iconFavorite =  Icons.favorite;
+      }else{
+        _iconFavorite = Icons.favorite_border;
+      }
+    });
   }
 
   @override
@@ -64,6 +83,14 @@ class _DetailRestaurantState extends State<DetailRestaurant> {
                           ),
                           onPressed: () {
                             Navigator.of(context).pop();
+                          }),
+                      IconButton(
+                          icon: Icon(
+                            _iconFavorite,
+                            color: Colors.pink,
+                          ),
+                          onPressed: () {
+                            _setFavorite();
                           })
                     ],
                   ),
@@ -89,8 +116,9 @@ class _DetailRestaurantState extends State<DetailRestaurant> {
       child: BlocBuilder<DetailBloc, RestaurantState>(
         builder: (context, state) {
           if (state is RestaurantSuccess) {
-            final RestaurantsModel data = state.data;
+            data = state.data;
             debugPrint('data ${state.data}');
+            _isFavorite = data.isFavorite;
             return _body(context, data);
           } else if (state is RestaurantLoading) {
             return Center(
@@ -107,7 +135,7 @@ class _DetailRestaurantState extends State<DetailRestaurant> {
     );
   }
 
-  Widget _body(BuildContext context, RestaurantsModel data) {
+  Widget _body(BuildContext context, RestaurantEntity data) {
     return ListView(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
@@ -141,11 +169,11 @@ class _DetailRestaurantState extends State<DetailRestaurant> {
                       child: ListView.builder(
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
-                          itemCount: data.categorieModel.length,
+                          itemCount: data.categoryEntity.length,
                           itemBuilder: (context, index) {
                             return Center(
                                 child:
-                                    Text('${data.categorieModel[index].name}, ',
+                                    Text('${data.categoryEntity[index].name}, ',
                                         style: TextStyle(
                                           color: Colors.white,
                                         )));
@@ -227,7 +255,7 @@ class _DetailRestaurantState extends State<DetailRestaurant> {
     );
   }
 
-  Widget _buildFoods(BuildContext context, FoodsModel foodsModel) {
+  Widget _buildFoods(BuildContext context, FoodEntity foodsModel) {
     return Container(
         height: 150,
         width: 150,
@@ -275,7 +303,7 @@ class _DetailRestaurantState extends State<DetailRestaurant> {
         ));
   }
 
-  Widget _buildDrinks(BuildContext context, DrinksModel drinkModel) {
+  Widget _buildDrinks(BuildContext context, DrinkEntity drinkModel) {
     return Container(
         height: 150,
         width: 150,

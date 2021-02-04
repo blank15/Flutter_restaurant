@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_restaurant/bloc/bloc.dart';
 import 'package:flutter_restaurant/common/style.dart';
-import 'package:flutter_restaurant/data/model/restaurants_model.dart';
-import 'package:flutter_restaurant/ui/search.dart';
+import 'package:flutter_restaurant/domain/entity/restaurant_entity.dart';
+import 'package:flutter_restaurant/ui/favorite_screen.dart';
+import 'package:flutter_restaurant/ui/search_screen.dart';
+import 'package:flutter_restaurant/ui/setting_screen.dart';
 import 'package:flutter_restaurant/widget/slider_widget.dart';
 import 'package:flutter_restaurant/widget/start_rating.dart';
 
-import 'detail_restaurant.dart';
+import 'detail_restaurant_screen.dart';
 
 class Home extends StatefulWidget {
   static const routeName = '/home_page';
@@ -20,7 +22,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
-  List<RestaurantsModel> dataList = List<RestaurantsModel>();
+  List<RestaurantEntity> dataList = List<RestaurantEntity>();
 
   @override
   void initState() {
@@ -52,8 +54,18 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 Icons.favorite_border,
                 color: Colors.grey,
               ),
-              onPressed: () {},
-            )
+              onPressed: () {
+                Navigator.pushNamed(context, FavoriteScreen.routeName);
+              },
+            ),
+            IconButton(
+                icon: Icon(
+                  Icons.settings,
+                  color: Colors.grey,
+                ),
+                onPressed: () {
+                  Navigator.pushNamed(context, SettingScreen.routeName);
+                }),
           ],
         ),
         body: _buildBody(context));
@@ -165,7 +177,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       child: BlocBuilder<RestaurantBloc, RestaurantState>(
           builder: (context, state) {
         if (state is RestaurantSuccess) {
-          final List<RestaurantsModel> data = state.data;
+          final List<RestaurantEntity> data = state.data;
           return ListView.builder(
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
@@ -195,7 +207,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       child: BlocBuilder<RestaurantBloc, RestaurantState>(
           builder: (context, state) {
         if (state is RestaurantSuccess) {
-          final List<RestaurantsModel> data = state.data;
+          final List<RestaurantEntity> data = state.data;
           return ListView.builder(
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
@@ -226,14 +238,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           builder: (context, state) {
         if (state is RestaurantSuccess) {
           dataList = state.data;
-          final List<RestaurantsModel> data = dataList;
           return ListView.builder(
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
             physics: ScrollPhysics(),
             itemCount: 5,
             itemBuilder: (context, index) {
-              return _buildRestaurantRecomended(context, data[index]);
+              return _buildRestaurantRecomended(context, dataList[index]);
             },
           );
         } else if (state is RestaurantLoading) {
@@ -251,7 +262,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
 
   Widget _buildRestaurantRecomended(
-      BuildContext context, RestaurantsModel restaurants) {
+      BuildContext context, RestaurantEntity restaurants) {
     return GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, DetailRestaurant.routeName,
@@ -318,7 +329,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
 
   Widget _buildRestaurantItem(
-      BuildContext context, RestaurantsModel restaurants) {
+      BuildContext context, RestaurantEntity restaurants) {
     return GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, DetailRestaurant.routeName,
@@ -357,7 +368,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
 
   Widget _buildRestaurantItemMore(
-      BuildContext context, RestaurantsModel restaurants) {
+      BuildContext context, RestaurantEntity restaurants) {
     return GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, DetailRestaurant.routeName,

@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_restaurant/bloc/bloc.dart';
 import 'package:flutter_restaurant/bloc/list_restaurant/restaurant_state.dart';
 import 'package:flutter_restaurant/bloc/search_restaurant/search_restaurant.dart';
-import 'package:flutter_restaurant/data/model/restaurants_model.dart';
-import 'package:flutter_restaurant/ui/detail_restaurant.dart';
+import 'package:flutter_restaurant/domain/entity/restaurant_entity.dart';
+import 'package:flutter_restaurant/ui/detail_restaurant_screen.dart';
 import 'package:flutter_restaurant/widget/start_rating.dart';
 
 class SearchView extends StatefulWidget {
@@ -20,7 +20,7 @@ class _SearchViewState extends State<SearchView> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       appBar: new AppBar(
         backgroundColor: Colors.white,
         title: new Text(
@@ -61,7 +61,7 @@ class _SearchViewState extends State<SearchView> {
         child:
             BlocBuilder<SearchBloc, RestaurantState>(builder: (context, state) {
           if (state is RestaurantSuccess) {
-            final List<RestaurantsModel> data = state.data;
+            final List<RestaurantEntity> data = state.data;
             return ListView.builder(
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
@@ -90,7 +90,7 @@ class _SearchViewState extends State<SearchView> {
   }
 
   Widget _buildRestaurantItemMore(
-      BuildContext context, RestaurantsModel restaurants) {
+      BuildContext context, RestaurantEntity restaurants) {
     return GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, DetailRestaurant.routeName,

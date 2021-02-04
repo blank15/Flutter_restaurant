@@ -1,13 +1,21 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_restaurant/data/model/base_model.dart';
-import 'package:flutter_restaurant/data/model/detail_model.dart';
+import 'package:flutter_restaurant/data/remote/model/base_model.dart';
+import 'package:flutter_restaurant/data/remote/model/detail_model.dart';
 
-class ApiService {
+
+abstract class ApiService {
+  Future<BaseModel> fetchRestaurans();
+  Future<DetailModel> fetchDetail(String id);
+  Future<BaseModel> searchRestaurans(String query);
+}
+
+class ApiServiceImpl extends ApiService {
   final Dio dio;
 
-  ApiService({@required this.dio});
+  ApiServiceImpl({@required this.dio});
 
+  @override
   Future<BaseModel> fetchRestaurans() async {
     final response = await dio.get('/list');
     if (response.statusCode == 200) {
@@ -16,7 +24,7 @@ class ApiService {
       throw Exception('Failed to load data');
     }
   }
-
+  @override
   Future<DetailModel> fetchDetail(String id) async {
     final response = await dio.get('/detail/$id');
     if (response.statusCode == 200) {
@@ -25,9 +33,9 @@ class ApiService {
       throw Exception(response.statusMessage);
     }
   }
-
+  @override
   Future<BaseModel> searchRestaurans(String query) async {
-    final response = await dio.get('//search?q=$query');
+    final response = await dio.get('/search?q=$query');
     if (response.statusCode == 200) {
       return BaseModel.fromJson(response.data);
     } else {

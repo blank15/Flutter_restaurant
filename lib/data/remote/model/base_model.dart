@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_restaurant/data/model/restaurants_model.dart';
+import 'package:flutter_restaurant/data/remote/model/restaurants_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'base_model.g.dart';

@@ -1,8 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_restaurant/data/model/drinks_model.dart';
-import 'package:flutter_restaurant/data/model/foods_model.dart';
 import 'package:json_annotation/json_annotation.dart';
-
+import 'drinks_model.dart';
+import 'foods_model.dart';
 part 'menus_model.g.dart';
 
 @JsonSerializable()

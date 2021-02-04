@@ -22,12 +22,36 @@ class RestaurantSuccess<T> extends RestaurantState {
   List<Object> get props => super.props;
 }
 
+class RestaurantDetail<T> extends RestaurantState {
+  final T data;
+
+  RestaurantDetail({@required this.data});
+
+  @override
+  List<Object> get props => super.props;
+}
+
+
 class RestaurantNoInternet extends RestaurantState {}
 
 class RestaurantFailed<String> extends RestaurantState {
   final String error;
 
   RestaurantFailed({@required this.error});
+
+  @override
+  // TODO: implement props
+  List<Object> get props => super.props;
+}
+
+class SuccessSaveFavorite extends RestaurantState{
+
+}
+class SuccessDeleteFavorite extends RestaurantState{}
+class FailedFavorite<String> extends RestaurantState{
+  final String error;
+
+  FailedFavorite({@required this.error});
 
   @override
   // TODO: implement props

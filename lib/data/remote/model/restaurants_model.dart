@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_restaurant/data/model/categorie_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import 'categorie_model.dart';
 import 'menus_model.dart';
 
 part 'restaurants_model.g.dart';
