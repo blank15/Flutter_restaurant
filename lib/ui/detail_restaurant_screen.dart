@@ -9,6 +9,8 @@ import 'package:flutter_restaurant/domain/entity/food_entity.dart';
 import 'package:flutter_restaurant/domain/entity/restaurant_entity.dart';
 import 'package:flutter_restaurant/widget/start_rating.dart';
 
+import '../bloc/bloc.dart';
+
 class DetailRestaurant extends StatefulWidget {
   static final routeName = '/detail_restaurant';
   static final imageHeader = 'image';
@@ -23,10 +25,10 @@ class DetailRestaurant extends StatefulWidget {
 }
 
 class _DetailRestaurantState extends State<DetailRestaurant> {
-
   bool _isFavorite = false;
-  IconData _iconFavorite =  Icons.favorite_border;
+  IconData _iconFavorite = Icons.favorite_border;
   RestaurantEntity data;
+
   @override
   void initState() {
     super.initState();
@@ -34,16 +36,17 @@ class _DetailRestaurantState extends State<DetailRestaurant> {
       ..add(FetchDetailRestaurant(id: widget.restaurants.id));
   }
 
-  _setFavorite(){
+  _setFavorite() {
     setState(() {
-      _isFavorite =! _isFavorite;
-      if(_isFavorite){
-       if(data !=null){
-         context.read<DetailBloc>()
-           ..add(SaveRestaurant(data: data));
-       }
-        _iconFavorite =  Icons.favorite;
-      }else{
+      _isFavorite = !_isFavorite;
+      data.isFavorite = _isFavorite;
+      if (_isFavorite) {
+        if (data != null) {
+          context.read<DetailBloc>()..add(SaveRestaurant(data: data));
+        }
+        _iconFavorite = Icons.favorite;
+      } else {
+        context.read<DetailBloc>()..add(DeleteFavorite(data: data));
         _iconFavorite = Icons.favorite_border;
       }
     });
@@ -53,85 +56,92 @@ class _DetailRestaurantState extends State<DetailRestaurant> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-          child: Container(
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.all(18.0),
-              decoration: BoxDecoration(
-                  color: Colors.green,
-                  image: DecorationImage(
-                      image: NetworkImage(
-                        'https://restaurant-api.dicoding.dev/images/medium/${widget.restaurants.pictureId}',
-                      ),
-                      fit: BoxFit.fill),
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(40),
-                      bottomRight: Radius.circular(40))),
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 40,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                          icon: Icon(
-                            Icons.arrow_back,
-                            color: Colors.white,
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          }),
-                      IconButton(
-                          icon: Icon(
-                            _iconFavorite,
-                            color: Colors.pink,
-                          ),
-                          onPressed: () {
-                            _setFavorite();
-                          })
-                    ],
-                  ),
-                  SizedBox(
-                    height: 200,
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            _bodyWithData(context)
-          ],
+        child:
+        BlocBuilder<DetailBloc, RestaurantState>(
+          builder: (context, state) {
+            debugPrint('state $state');
+            if (state is RestaurantSuccess) {
+              data = state.data;
+              debugPrint('data ${state.data}');
+              _isFavorite = data.isFavorite;
+              _iconFavorite = _isFavorite ? Icons.favorite : Icons.favorite_border;
+              return _bodyWithData(context);
+            } else if (state is RestaurantLoading) {
+              return Center(
+                  child: CircularProgressIndicator(
+                    backgroundColor: Colors.green,
+                  ));
+            } else if (state is RestaurantNoInternet) {
+              return Text("No Internet Connection");
+            } else if (state is SuccessSaveFavorite) {
+              data = state.data;
+              return _bodyWithData(context);
+            } else if (state is SuccessDeleteFavorite) {
+              data = state.data;
+              return _bodyWithData(context);
+            } else if (state is FailedFavorite) {
+              return Text(state.error);
+            } else {
+              return Text("Unknown error");
+            }
+          },
         ),
-      )),
+      ),
     );
   }
 
   Widget _bodyWithData(BuildContext context) {
-    return Container(
-      height: 4000,
-      child: BlocBuilder<DetailBloc, RestaurantState>(
-        builder: (context, state) {
-          if (state is RestaurantSuccess) {
-            data = state.data;
-            debugPrint('data ${state.data}');
-            _isFavorite = data.isFavorite;
-            return _body(context, data);
-          } else if (state is RestaurantLoading) {
-            return Center(
-                child: CircularProgressIndicator(
-              backgroundColor: Colors.green,
-            ));
-          } else if (state is RestaurantNoInternet) {
-            return Text("No Internet Connection");
-          } else {
-            return Text("Failed get Content");
-          }
-        },
-      ),
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.all(18.0),
+          decoration: BoxDecoration(
+              color: Colors.green,
+              image: DecorationImage(
+                  image: NetworkImage(
+                    'https://restaurant-api.dicoding.dev/images/medium/${widget.restaurants.pictureId}',
+                  ),
+                  fit: BoxFit.fill),
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(40),
+                  bottomRight: Radius.circular(40))),
+          child: Column(
+            children: [
+              SizedBox(
+                height: 40,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                      icon: Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      }),
+                  IconButton(
+                      icon: Icon(
+                        _iconFavorite,
+                        color: Colors.pink,
+                      ),
+                      onPressed: () {
+                        _setFavorite();
+                      })
+                ],
+              ),
+              SizedBox(
+                height: 200,
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 15,
+        ),
+        _body(context,data)
+      ],
     );
   }
 

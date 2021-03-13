@@ -5,6 +5,8 @@ import 'package:flutter_restaurant/bloc/bloc.dart';
 import 'package:flutter_restaurant/data/repository/restaurant_repository.dart';
 import 'package:flutter_restaurant/domain/entity/restaurant_entity.dart';
 
+import '../bloc.dart';
+
 class DetailBloc extends Bloc<RestaurantEvent, RestaurantState> {
   final RestaurantRepository repository;
 
@@ -13,9 +15,11 @@ class DetailBloc extends Bloc<RestaurantEvent, RestaurantState> {
   @override
   Stream<RestaurantState> mapEventToState(RestaurantEvent event) async* {
     if (event is FetchDetailRestaurant) {
-     yield* _getDetailRestaurant(event.id);
-    }else if(event is SaveRestaurant){
-     yield* _saveRestaurant(event.data);
+      yield* _getDetailRestaurant(event.id);
+    } else if (event is SaveRestaurant) {
+      yield* _saveRestaurant(event.data);
+    } else if (event is DeleteFavorite) {
+      yield* _deleteRestaurant(event.data);
     }
   }
 
@@ -37,10 +41,20 @@ class DetailBloc extends Bloc<RestaurantEvent, RestaurantState> {
   }
 
   Stream<RestaurantState> _saveRestaurant(RestaurantEntity data) async* {
-    try{
-      final response = await repository.insertFavorite(data);
-      yield SuccessSaveFavorite();
-    } catch (e){
+    try {
+      debugPrint('data ${data.menus}');
+      await repository.insertFavorite(data);
+      yield SuccessSaveFavorite(data: data);
+    } catch (e) {
+      yield FailedFavorite(error: e.toString());
+    }
+  }
+
+  Stream<RestaurantState> _deleteRestaurant(RestaurantEntity data) async* {
+    try {
+      await repository.deleteFavorite(data.id);
+      yield SuccessDeleteFavorite(data: data);
+    } catch (e) {
       yield FailedFavorite(error: e.toString());
     }
   }

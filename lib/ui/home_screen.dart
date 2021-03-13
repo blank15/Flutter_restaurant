@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_restaurant/bloc/bloc.dart';
 import 'package:flutter_restaurant/common/style.dart';
 import 'package:flutter_restaurant/domain/entity/restaurant_entity.dart';
+import 'package:flutter_restaurant/helper/background_service.dart';
+import 'package:flutter_restaurant/helper/notification_helper.dart';
 import 'package:flutter_restaurant/ui/favorite_screen.dart';
 import 'package:flutter_restaurant/ui/search_screen.dart';
 import 'package:flutter_restaurant/ui/setting_screen.dart';
@@ -23,11 +25,21 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   List<RestaurantEntity> dataList = List<RestaurantEntity>();
-
+  final NotificationHelper _notificationHelper = NotificationHelper();
+  final BackgroundService _service = BackgroundService();
   @override
   void initState() {
     super.initState();
+    port.listen((_) async => await _service.someTask());
+    _notificationHelper.configureSelectNotificationSubject(
+        DetailRestaurant.routeName);
     context.read<RestaurantBloc>()..add(FetchRestaurant());
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    selectNotificationSubject.close();
   }
 
   @override

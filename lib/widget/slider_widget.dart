@@ -72,14 +72,7 @@ class _SliderWidgetState extends State<SliderWidget> {
                         right: 0.0,
                         child: Container(
                           decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                Color.fromARGB(200, 0, 0, 0),
-                                Color.fromARGB(0, 0, 0, 0)
-                              ],
-                              begin: Alignment.bottomCenter,
-                              end: Alignment.topCenter,
-                            ),
+
                           ),
                         ),
                       ),

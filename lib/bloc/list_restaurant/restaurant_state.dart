@@ -5,7 +5,6 @@ abstract class RestaurantState extends Equatable {
   const RestaurantState();
 
   @override
-  // TODO: implement props
   List<Object> get props => [];
 }
 
@@ -40,14 +39,25 @@ class RestaurantFailed<String> extends RestaurantState {
   RestaurantFailed({@required this.error});
 
   @override
-  // TODO: implement props
   List<Object> get props => super.props;
 }
 
-class SuccessSaveFavorite extends RestaurantState{
+class SuccessSaveFavorite<T> extends RestaurantState{
+  final T data;
+
+  SuccessSaveFavorite({@required this.data});
+
+  @override
+  List<Object> get props => super.props;
 
 }
-class SuccessDeleteFavorite extends RestaurantState{}
+class SuccessDeleteFavorite<T> extends RestaurantState{
+  final T data;
+
+  SuccessDeleteFavorite({@required this.data});
+  @override
+  List<Object> get props => super.props;
+}
 class FailedFavorite<String> extends RestaurantState{
   final String error;
 

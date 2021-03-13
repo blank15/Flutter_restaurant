@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_restaurant/domain/entity/drinks_entity.dart';
@@ -19,18 +17,24 @@ class MenuEntity extends Equatable {
     return MenuEntity(
       foods: (json['foods'] as List)
           ?.map((e) =>
-      e == null ? null : FoodEntity.fromJson(e as Map<String, dynamic>))
+              e == null ? null : FoodEntity.fromJson(e as Map<String, dynamic>))
           ?.toList(),
       drinks: (json['drinks'] as List)
-          ?.map((e) =>
-      e == null ? null : DrinkEntity.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => e == null
+              ? null
+              : DrinkEntity.fromJson(e as Map<String, dynamic>))
           ?.toList(),
     );
   }
-  Map<String, dynamic> toMap() =>
-      <String, dynamic>{
-        'foods': foods,
-        'drinks':drinks,
-      };
 
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.foods != null) {
+      data['foods'] = this.foods.map((v) => v.toJson()).toList();
+    }
+    if (this.drinks != null) {
+      data['drinks'] = this.drinks.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
 }

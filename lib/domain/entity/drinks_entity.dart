@@ -15,8 +15,9 @@ class DrinkEntity extends Equatable {
       name: json['name'] as String,
     );
   }
-  Map<String, dynamic> toJson(DrinkEntity instance) =>
-      <String, dynamic>{
-        'name': instance.name,
-      };
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['name'] = this.name;
+    return data;
+  }
 }

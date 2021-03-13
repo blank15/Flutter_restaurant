@@ -41,6 +41,7 @@ class RestaurantRepositoryImpl extends RestaurantRepository {
   @override
   Future<RestaurantEntity> getDetailRestaurant(String id) async {
     var local = await localSourceDatabase.getDetailFavorite(id);
+    debugPrint('data ${local.toString()}');
     if (local != null) {
       return RestaurantEntity(
           id: local.id,
@@ -91,9 +92,7 @@ class RestaurantRepositoryImpl extends RestaurantRepository {
         city: data.city,
         rating: data.rating.toString(),
         jsonMenus:
-            MenuEntity(foods: data.menus.foods, drinks: data.menus.drinks)
-                .toMap()
-                .toString(),
+            jsonEncode(MenuEntity(foods: data.menus.foods, drinks: data.menus.drinks).toJson()),
         jsonCategories: CategoryEntity.encode(data.categoryEntity));
     return await localSourceDatabase.insertFavorite(dataRestoran);
   }

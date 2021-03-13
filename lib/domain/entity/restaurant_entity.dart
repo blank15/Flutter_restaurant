@@ -11,7 +11,7 @@ class RestaurantEntity extends Equatable {
   final String pictureId;
   final String city;
   final double rating;
-  final bool isFavorite;
+  bool isFavorite;
   final MenuEntity menus;
   final List<CategoryEntity> categoryEntity;
 
@@ -22,9 +22,40 @@ class RestaurantEntity extends Equatable {
       @required this.pictureId,
       @required this.city,
       @required this.rating,
-      this.isFavorite,
+      this.isFavorite = false,
       this.menus,
       this.categoryEntity});
+
+ factory RestaurantEntity.fromJson(Map<String, dynamic> json) {
+    return RestaurantEntity(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      description: json['description'] as String,
+      pictureId: json['pictureId'] as String,
+      city: json['city'] as String,
+      rating: (json['rating'] as num)?.toDouble(),
+      menus: json['menus'] == null
+          ? null
+          : MenuEntity.fromJson(json['menus'] as Map<String, dynamic>),
+      categoryEntity: (json['categories'] as List)
+          ?.map((e) => e == null
+          ? null
+          : CategoryEntity.fromJson(e as Map<String, dynamic>))
+          ?.toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson(RestaurantEntity instance) =>
+      <String, dynamic>{
+        'id': instance.id,
+        'name': instance.name,
+        'description': instance.description,
+        'pictureId': instance.pictureId,
+        'city': instance.city,
+        'rating': instance.rating,
+        'menus': instance.menus,
+        'categoryEntity': instance.categoryEntity,
+      };
 
   @override
   List<Object> get props =>
